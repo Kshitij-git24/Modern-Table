@@ -1,7 +1,6 @@
 import { useMemo } from "react"
 import { Building2 } from "lucide-react"
 import { CompanyTable, type Company } from "@/components/data-table"
-import { ThemeToggle } from "@/components/theme-toggle"
 import { generateMockCompanies } from "@/lib/mock-data"
 
 function App() {
@@ -37,7 +36,9 @@ function App() {
               Settings
             </span>
           </nav>
-          <ThemeToggle />
+          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+            Theme lives in the table →
+          </span>
         </div>
       </header>
 
@@ -57,6 +58,7 @@ function App() {
           data={companies}
           onRowClick={handleRowClick}
           csvFilename="companies"
+          showThemeToggle
         />
       </main>
     </div>

@@ -14,7 +14,7 @@ A drop-in React table for company records. You already have your own site (navba
 - **Column visibility** toggle
 - **Sticky header** + **row virtualization** (smooth at 10k+ rows)
 - **Clickable rows** — you wire navigation to your detail page
-- **Theme follows the host** (light / dark / whatever you have)
+- **Theme follows the host** by default — or opt-in to a built-in floating dark/light toggle via `showThemeToggle`
 - **Responsive** — stacks on mobile, horizontal-scrolls when columns exceed viewport
 
 ---
@@ -59,11 +59,13 @@ src/components/data-table/
 ├── data-table.tsx
 ├── toolbar.tsx
 ├── pagination.tsx
+├── theme-toggle.tsx
+├── use-theme.ts
 └── lib/
     └── csv.ts
 ```
 
-That's it — no other files from this repo are needed. (`mock-data.ts`, `theme-toggle.tsx`, `use-theme.ts`, `App.tsx` are demo-only.)
+That's it — no other files from this repo are needed. (`mock-data.ts` and `App.tsx` are demo-only.)
 
 ---
 
@@ -139,15 +141,16 @@ const rows: Company[] = apiResponse.map((r) => ({
 | `data` | `Company[]` | ✓ | — | Full dataset. Table paginates and filters client-side. |
 | `onRowClick` | `(c: Company) => void` | — | — | Fires when a row is clicked. Use it to navigate to a detail page. |
 | `csvFilename` | `string` | — | `"companies"` | Base name for CSV downloads (`-all.csv` or `-selected.csv` is appended). |
+| `showThemeToggle` | `boolean` | — | `false` | When `true`, renders a sun/moon toggle floating at the top-right of the table card. The table then owns the theme (writes `.dark` on `<html>` + persists to `localStorage`). Leave `false` if your site already has its own theme toggle. |
 
 ---
 
 ## How it fits inside your existing UI
 
 - **No layout assumptions** — the table renders as a self-contained card and fills its parent container's width. Your navbar / sidebar / footer keep working exactly as before.
-- **No global side effects** — it doesn't inject CSS globals, attach to `document`, register routes, or hold app-wide state.
+- **No global side effects by default** — it doesn't inject CSS globals, attach to `document`, register routes, or hold app-wide state. The one exception is `showThemeToggle` — when you opt in, the table writes `.dark` on `<html>` and persists the choice to `localStorage`. Leave it `false` if your host already manages theme.
 - **No data fetching** — bring your own (React Query, SWR, RTK Query, plain fetch — whatever) and pass the array.
-- **Theme follows the host** — uses shadcn's CSS variables. If you toggle `.dark` on `<html>`, the table follows automatically.
+- **Theme follows the host by default** — uses shadcn's CSS variables. If you toggle `.dark` on `<html>`, the table follows automatically. Pass `showThemeToggle` only if you want the table itself to own the theme.
 - **Sits anywhere in your layout tree** — top of a page, inside a tab, inside a modal — as long as the parent gives it a width, it works.
 
 ---

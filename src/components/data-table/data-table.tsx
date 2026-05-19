@@ -26,6 +26,7 @@ import { cn } from "@/lib/utils"
 import { companyColumns } from "./columns"
 import { Toolbar } from "./toolbar"
 import { Pagination } from "./pagination"
+import { ThemeToggle } from "./theme-toggle"
 import { companiesToCsv, downloadCsv } from "./lib/csv"
 import { type Company, type SearchScope } from "./types"
 
@@ -33,6 +34,7 @@ interface CompanyTableProps {
   data: Company[]
   onRowClick?: (company: Company) => void
   csvFilename?: string
+  showThemeToggle?: boolean
 }
 
 const SEARCHABLE_KEYS: Exclude<SearchScope, "all">[] = [
@@ -67,6 +69,7 @@ export function CompanyTable({
   data,
   onRowClick,
   csvFilename = "companies",
+  showThemeToggle = false,
 }: CompanyTableProps) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnPinning, setColumnPinning] = useState<ColumnPinningState>({
@@ -178,7 +181,12 @@ export function CompanyTable({
       : 0
 
   return (
-    <div className="overflow-hidden rounded-xl border bg-card shadow-sm">
+    <div className="relative overflow-hidden rounded-xl border bg-card shadow-sm">
+      {showThemeToggle && (
+        <div className="absolute right-2 top-2 z-30">
+          <ThemeToggle />
+        </div>
+      )}
       <Toolbar
         table={table}
         search={search}
@@ -187,6 +195,7 @@ export function CompanyTable({
         onScopeChange={handleScopeChange}
         onExportAll={handleExportAll}
         onExportSelected={handleExportSelected}
+        className={showThemeToggle ? "sm:pr-16" : undefined}
       />
       <Separator />
       <div

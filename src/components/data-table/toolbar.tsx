@@ -25,6 +25,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Separator } from "@/components/ui/separator"
+import { cn } from "@/lib/utils"
 import { SEARCH_SCOPES, type Company, type SearchScope } from "./types"
 
 interface ToolbarProps {
@@ -35,6 +36,7 @@ interface ToolbarProps {
   onScopeChange: (value: SearchScope) => void
   onExportAll: () => void
   onExportSelected: () => void
+  className?: string
 }
 
 const COLUMN_LABELS: Record<string, string> = {
@@ -55,6 +57,7 @@ export function Toolbar({
   onScopeChange,
   onExportAll,
   onExportSelected,
+  className,
 }: ToolbarProps) {
   const selectedCount = table.getFilteredSelectedRowModel().rows.length
   const filteredCount = table.getFilteredRowModel().rows.length
@@ -63,7 +66,12 @@ export function Toolbar({
     .filter((c) => c.getCanHide() && c.id !== "select")
 
   return (
-    <div className="flex flex-col gap-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+    <div
+      className={cn(
+        "flex flex-col gap-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between",
+        className
+      )}
+    >
       <div className="flex w-full items-center rounded-lg border bg-background shadow-sm ring-1 ring-transparent transition focus-within:ring-ring/40 focus-within:border-ring/60 sm:w-auto sm:min-w-[420px] sm:max-w-[560px] sm:flex-1">
         <Select value={scope} onValueChange={(v) => onScopeChange(v as SearchScope)}>
           <SelectTrigger
