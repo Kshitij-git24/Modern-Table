@@ -70,7 +70,7 @@ export function CompanyTable({
 }: CompanyTableProps) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnPinning, setColumnPinning] = useState<ColumnPinningState>({
-    left: [],
+    left: ["select"],
     right: [],
   })
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -99,7 +99,16 @@ export function CompanyTable({
     enableColumnPinning: true,
     getRowId: (row) => row.id,
     onSortingChange: setSorting,
-    onColumnPinningChange: setColumnPinning,
+    onColumnPinningChange: (updater) => {
+      setColumnPinning((old) => {
+        const next = typeof updater === "function" ? updater(old) : updater
+        const left = (next.left ?? []).filter((id) => id !== "select")
+        return {
+          left: ["select", ...left],
+          right: (next.right ?? []).filter((id) => id !== "select"),
+        }
+      })
+    },
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     onPaginationChange: setPagination,
